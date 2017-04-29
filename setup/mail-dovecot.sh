@@ -23,7 +23,7 @@ source /etc/mailinabox.conf # load global vars
 echo "Installing Dovecot (IMAP server)..."
 apt_install \
 	dovecot-core dovecot-imapd dovecot-pop3d dovecot-lmtpd dovecot-sqlite sqlite3 \
-	dovecot-sieve dovecot-managesieved
+	dovecot-sieve dovecot-managesieved dovecot-solr
 
 # The `dovecot-imapd`, `dovecot-pop3d`, and `dovecot-lmtpd` packages automatically
 # enable IMAP, POP and LMTP protocols.
@@ -107,7 +107,7 @@ tools/editconf.py /etc/dovecot/conf.d/20-pop3.conf \
 	pop3_uidl_format="%08Xu%08Xv"
 
 # Full Text Search - Enable full text search of mail using solr.
-apt_install solr-tomcat dovecot-solr
+apt_install solr-tomcat
 
 # Copy dovecot solr schema to solr configuration.
 cp /usr/share/dovecot/solr-schema.xml /etc/solr/conf/schema.xml
