@@ -277,7 +277,7 @@ tools/editconf.py /etc/default/bind9 \
 	"OPTIONS=\"-u bind -4\""
 if ! grep -q "listen-on " /etc/bind/named.conf.options; then
 	# Add a listen-on directive if it doesn't exist inside the options block.
-	sed -i "s/^}/\n\tlisten-on { 127.0.0.1; };\n}/" /etc/bind/named.conf.options
+	sed -i "s/^}/\n\tlisten-on { 127.0.0.1; };\n\tlisten-on-v6 { ::1; };\n}/" /etc/bind/named.conf.options
 fi
 if [ -f /etc/resolvconf/resolv.conf.d/original ]; then
 	echo "Archiving old resolv.conf (was /etc/resolvconf/resolv.conf.d/original, now /etc/resolvconf/resolv.conf.original)." #NODOC
