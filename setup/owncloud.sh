@@ -9,15 +9,8 @@ source /etc/mailinabox.conf # load global vars
 
 echo "Installing Nextcloud (contacts/calendar)..."
 
-apt_install \
-	dbconfig-common \
-	php5-cli php5-sqlite php5-gd php5-imap php5-curl php-pear php-apc curl libapr1 libtool libcurl4-openssl-dev php-xml-parser \
-	php5 php5-dev php5-gd php5-fpm memcached php5-memcached
-
 apt-get purge -qq -y owncloud*
 
-# Install php-7 from the ppa of the ubuntu php maintainer Ondřej Surý located here https://launchpad.net/%7Eondrej/+archive/ubuntu/php
-hide_output add-apt-repository -y ppa:ondrej/php
 hide_output apt-get update
 apt_install php7.0 php7.0-fpm \
 	php7.0-cli php7.0-sqlite php7.0-gd php7.0-imap php7.0-curl php-pear php-apc curl \
@@ -165,7 +158,6 @@ if [ ! -d /usr/local/lib/owncloud/ ] \
 
 	# Stop php-fpm
 	hide_output service php7.0-fpm stop
-	hide_output service php5-fpm stop
 
 	# Backup the existing ownCloud/Nextcloud.
 	# Create a backup directory to store the current installation and database to
@@ -391,5 +383,4 @@ chmod +x /etc/cron.hourly/mailinabox-owncloud
 # ```
 
 # Enable PHP modules and restart PHP.
-restart_service php5-fpm
 restart_service php7.0-fpm
