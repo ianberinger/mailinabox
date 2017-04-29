@@ -122,7 +122,7 @@ function get_default_privateip {
 	fi
 
 	echo $address
-		
+
 }
 
 function ufw_allow {
@@ -133,7 +133,7 @@ function ufw_allow {
 }
 
 function restart_service {
-	hide_output service $1 restart
+	hide_output systemctl $1 restart
 }
 
 ## Dialog Functions ##
