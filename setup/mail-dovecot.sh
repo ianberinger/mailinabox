@@ -19,14 +19,11 @@ source setup/functions.sh # load our functions
 source /etc/mailinabox.conf # load global vars
 
 
-# Install packages for dovecot. These are all core dovecot plugins,
-# but dovecot-lucene is packaged by *us* in the Mail-in-a-Box PPA,
-# not by Ubuntu.
-
+# Install packages for dovecot.
 echo "Installing Dovecot (IMAP server)..."
 apt_install \
 	dovecot-core dovecot-imapd dovecot-pop3d dovecot-lmtpd dovecot-sqlite sqlite3 \
-	dovecot-sieve dovecot-managesieved dovecot-lucene
+	dovecot-sieve dovecot-managesieved
 
 # The `dovecot-imapd`, `dovecot-pop3d`, and `dovecot-lmtpd` packages automatically
 # enable IMAP, POP and LMTP protocols.
@@ -109,14 +106,19 @@ tools/editconf.py /etc/dovecot/conf.d/20-imap.conf \
 tools/editconf.py /etc/dovecot/conf.d/20-pop3.conf \
 	pop3_uidl_format="%08Xu%08Xv"
 
-# Full Text Search - Enable full text search of mail using dovecot's lucene plugin,
-# which *we* package and distribute (dovecot-lucene package).
+# Full Text Search - Enable full text search of mail using solr.
+apt_install solr-tomcat dovecot-solr
+
+# Copy dovecot solr schema to solr configuration.
+cp /usr/share/dovecot/solr-schema.xml /etc/solr/conf/schema.xml
+
+# Enable dovecot's solr plugin.
 tools/editconf.py /etc/dovecot/conf.d/10-mail.conf \
-	mail_plugins="\$mail_plugins fts fts_lucene"
+	mail_plugins="\$mail_plugins fts fts_solr"
 cat > /etc/dovecot/conf.d/90-plugin-fts.conf << EOF;
 plugin {
-  fts = lucene
-  fts_lucene = whitespace_chars=@.
+	fts = solr
+  fts_solr = url=http://localhost:8080/solr/
 }
 EOF
 
@@ -216,4 +218,5 @@ ufw_allow pop3s
 ufw_allow sieve
 
 # Restart services.
+restart_service tomcat7
 restart_service dovecot

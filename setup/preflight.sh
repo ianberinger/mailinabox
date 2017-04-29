@@ -53,8 +53,7 @@ if [ -e ~/.wgetrc ]; then
 	exit
 fi
 
-# Check that we are running on x86_64 or i686, any other architecture is unsupported and
-# will fail later in the setup when we try to install the custom build lucene packages.
+# Check that we are running on x86_64 or i686, any other architecture is unsupported.
 #
 # Set ARM=1 to ignore this check if you have built the packages yourself. If you do this
 # you are on your own!
