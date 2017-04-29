@@ -122,6 +122,26 @@ plugin {
 }
 EOF
 
+# Add Solr maintenance tasks:
+# https://wiki2.dovecot.org/Plugins/FTS/Solr
+# Ask solr to optimize itself daily. Dovecot never does this.
+cat > /etc/cron.daily/mailinabox-solr-optimize << EOF;
+#!/bin/bash
+# Mail-in-a-Box
+# Ask solr to optimize itself.
+curl http://localhost:8080/solr/update?optimize=true
+EOF
+chmod +x /etc/cron.daily/mailinabox-solr-optimize
+
+# Ask solr to hard commit hourly. Dovecot only does soft commits.
+cat > /etc/cron.hourly/mailinabox-solr-commit << EOF;
+#!/bin/bash
+# Mail-in-a-Box
+# Ask solr to commit.
+curl http://localhost:8080/solr/update?commit=true
+EOF
+chmod +x /etc/cron.hourly/mailinabox-solr-commit
+
 # ### LDA (LMTP)
 
 # Enable Dovecot's LDA service with the LMTP protocol. It will listen
